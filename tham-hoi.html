@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký Thăm hỏi | v1.6</title>
+    <title>Đăng ký Thăm hỏi | Tổ Công đoàn LĐ 2 - KT</title>
     <style>
         :root { --primary-color: #004a99; --accent-color: #d32f2f; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
         .header { background: var(--primary-color); color: white; text-align: center; padding: 20px 10px; position: relative; }
         .btn-home { position: absolute; top: 15px; left: 10px; background: white; color: var(--primary-color); padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 12px; }
         .container { max-width: 600px; margin: 15px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); flex: 1; width: 95%; box-sizing: border-box; }
         label { font-weight: bold; display: block; margin-top: 15px; color: #333; font-size: 14px; }
         input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        input[readonly] { background-color: #e9ecef; color: #495057; }
-        .file-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
-        input[type="file"] { flex-grow: 1; }
+        input[readonly] { background-color: #e9ecef; }
         .btn-submit { background-color: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; }
-        .footer { background: #333; color: white; text-align: center; padding: 15px 10px; font-size: 13px; width: 100%; }
-        #loadingName { font-size: 12px; font-style: italic; margin-top: 5px; }
+        .footer { background: #333; color: white; text-align: center; padding: 15px 10px; font-size: 14px; width: 100%; }
+        #loadingName { font-size: 12px; margin-top: 5px; min-height: 15px; }
     </style>
 </head>
 <body>
@@ -29,11 +27,11 @@
     <h3 style="color: var(--accent-color); text-align: center; margin-top: 0;">ĐĂNG KÝ THĂM HỎI</h3>
     <form id="formThamHoi">
         <label>Mã số nhân viên (MSNV):</label>
-        <input type="text" id="msnv" placeholder="Nhập MSNV (ví dụ: 001702)" oninput="handleLookup()" required>
+        <input type="text" id="msnv" placeholder="Hãy nhập mã nhân viên (ví dụ: 001702)" oninput="handleLookup()" required>
         <div id="loadingName"></div>
 
         <label>Họ và tên (Tự động):</label>
-        <input type="text" id="hoTen" placeholder="Hệ thống sẽ tự tra cứu..." readonly required>
+        <input type="text" id="hoTen" placeholder="Hệ thống tự tra cứu từ DSDV..." readonly required>
 
         <label>Lý do thăm hỏi:</label>
         <select id="lyDo">
@@ -42,55 +40,60 @@
             <option value="Khó khăn">Hoàn cảnh khó khăn</option>
         </select>
 
-        <label>Đính kèm hồ sơ (Chụp ảnh/Chọn file):</label>
-        <div class="file-wrapper">
-            <input type="file" id="fileHoSo" accept="image/*" capture="environment">
-            <span style="font-size: 20px;">📷</span>
-        </div>
+        <label>Đính kèm đơn thuốc/hồ sơ (📷 Chụp ảnh):</label>
+        <input type="file" id="fileHoSo" accept="image/*" capture="environment">
 
         <label>Ghi chú:</label>
         <textarea id="ghiChu" rows="3" placeholder="Nội dung cụ thể..."></textarea>
 
-        <button type="button" id="btnSubmit" class="btn-submit" onclick="submitForm()">GỬI ĐĂNG KÝ</button>
+        <button type="button" class="btn-submit" onclick="submitForm()">GỬI ĐĂNG KÝ</button>
     </form>
 </div>
-<div class="footer">Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882</div>
+<div class="footer">
+    Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882 <br>
+    <small>Phiên bản hệ thống: v1.8</small>
+</div>
 
 <script>
+    // THAY LINK WEB APP CỦA ANH VÀO ĐÂY
+    const WEB_APP_URL = "LINK_WEB_APP_MOI_CUA_ANH"; 
+
     let typingTimer;
     function handleLookup() {
         clearTimeout(typingTimer);
         const msnv = document.getElementById('msnv').value;
         const msg = document.getElementById('loadingName');
         const nameField = document.getElementById('hoTen');
-        
         nameField.value = "";
+        
         if (msnv.length >= 4) {
-            msg.innerHTML = "🔍 Đang tra cứu tên nhân viên...";
+            msg.innerHTML = "🔍 Đang tra cứu tên...";
             msg.style.color = "blue";
             typingTimer = setTimeout(() => {
-                // Gọi hàm tra cứu từ Code.gs
-                google.script.run.withSuccessHandler(function(name) {
-                    if (name === "Không tìm thấy") {
-                        msg.innerHTML = "❌ Không tìm thấy nhân viên này!";
+                fetch(`${WEB_APP_URL}?action=lookup&msnv=${msnv}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.hoTen === "Không tìm thấy") {
+                        msg.innerHTML = "❌ Không tìm thấy nhân viên!";
                         msg.style.color = "red";
                     } else {
-                        nameField.value = name;
-                        msg.innerHTML = "✅ Xác nhận: " + name;
+                        nameField.value = data.hoTen;
+                        msg.innerHTML = "✅ Xác nhận: " + data.hoTen;
                         msg.style.color = "green";
                     }
-                }).traCuuTenNhanVien(msnv);
-            }, 500); // Chờ 0.5s sau khi ngừng gõ để tránh gọi liên tục
-        } else {
-            msg.innerHTML = "";
-        }
+                })
+                .catch(err => {
+                    msg.innerHTML = "⚠️ Lỗi kết nối dữ liệu!";
+                    msg.style.color = "orange";
+                });
+            }, 600);
+        } else { msg.innerHTML = ""; }
     }
 
     function submitForm() {
-        const msnv = document.getElementById('msnv').value;
         const hoTen = document.getElementById('hoTen').value;
         if (!hoTen || hoTen === "Không tìm thấy") return alert("Vui lòng nhập đúng MSNV!");
-        alert("Hệ thống đã ghi nhận yêu cầu của đồng chí " + hoTen);
+        alert("Hệ thống v1.8 đã ghi nhận yêu cầu của đồng chí " + hoTen);
     }
 </script>
 </body>
