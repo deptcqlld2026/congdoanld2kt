@@ -13,6 +13,11 @@
         label { font-weight: bold; display: block; margin-top: 15px; color: #333; font-size: 14px; }
         input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         input[readonly] { background-color: #e9ecef; }
+        
+        /* Khu vực chọn file và chụp ảnh */
+        .file-input-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 5px; background: #fff; }
+        .camera-btn { font-size: 28px; cursor: pointer; background: #f0f0f0; padding: 5px 12px; border-radius: 6px; border: 1px solid #ddd; }
+        
         .btn-submit { background-color: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; }
         .footer { background: #333; color: white; text-align: center; padding: 15px 0; font-size: 14px; width: 100%; }
         #loadingName { font-size: 12px; margin-top: 5px; min-height: 15px; font-weight: 500; }
@@ -27,7 +32,7 @@
     <h3 style="color: var(--accent-color); text-align: center; margin-top: 0;">ĐĂNG KÝ THĂM HỎI</h3>
     <form id="formThamHoi">
         <label>Mã số nhân viên (MSNV):</label>
-        <input type="text" id="msnv" placeholder="Hãy nhập mã nhân viên (ví dụ: 001702)" oninput="handleLookup()" required>
+        <input type="text" id="msnv" placeholder="Nhập mã nhân viên (ví dụ: 001702)" oninput="handleLookup()" required>
         <div id="loadingName"></div>
 
         <label>Họ và tên (Tự động):</label>
@@ -41,7 +46,10 @@
         </select>
 
         <label>Đính kèm đơn thuốc/hồ sơ (📷 Chụp ảnh):</label>
-        <input type="file" id="fileHoSo" accept="image/*" capture="environment">
+        <div class="file-input-wrapper">
+            <input type="file" id="fileHoSo" accept="image/*" capture="environment">
+            <span class="camera-btn" onclick="document.getElementById('fileHoSo').click()">📷</span>
+        </div>
 
         <label>Ghi chú:</label>
         <textarea id="ghiChu" rows="3" placeholder="Nội dung cụ thể..."></textarea>
@@ -51,7 +59,7 @@
 </div>
 <div class="footer">
     Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882 <br>
-    <small>Phiên bản hệ thống: v2.1</small>
+    <small>Phiên bản hệ thống: v2.2</small>
 </div>
 
 <script>
@@ -92,7 +100,7 @@
     function submitForm() {
         const hoTen = document.getElementById('hoTen').value;
         if (!hoTen || hoTen === "Không tìm thấy") return alert("Vui lòng nhập đúng MSNV!");
-        alert("Hệ thống v2.1 đã ghi nhận yêu cầu của đồng chí " + hoTen);
+        alert("Hệ thống v2.2 đã ghi nhận yêu cầu của đồng chí " + hoTen);
     }
 </script>
 </body>
