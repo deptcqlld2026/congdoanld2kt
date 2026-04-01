@@ -3,115 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công đoàn Tổ LĐ 2 - KT | v1.0</title>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
+    <title>Trang chủ | Tổ Công đoàn LĐ 2 - KT</title>
     <style>
-        :root { --primary-color: #004a99; --success-color: #28a745; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header { text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; margin-bottom: 25px; }
-        .search-box { width: 100%; padding: 12px 20px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 25px; font-size: 16px; outline: none; }
-        .card { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .card:hover { background-color: #f1f8ff; border-color: var(--primary-color); }
-        .info { flex-grow: 1; }
-        .actions { display: flex; gap: 10px; }
-        .btn { padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 14px; }
-        .btn-view { background-color: var(--primary-color); color: white; }
-        .btn-confirm { background-color: var(--success-color); color: white; }
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+        :root { --primary-color: #004a99; --accent-color: #d32f2f; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { background: var(--primary-color); color: white; text-align: center; padding: 20px 0; }
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; padding: 20px; }
+        .nav-card { background: white; width: 280px; padding: 40px 20px; text-align: center; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-decoration: none; color: #333; transition: 0.3s; border: 2px solid transparent; }
+        .nav-card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
+        .nav-card h3 { color: var(--primary-color); margin-top: 15px; }
+        .footer { background: #333; color: white; text-align: center; padding: 15px 0; font-size: 14px; }
     </style>
 </head>
 <body>
-
-<div class="container">
     <div class="header">
-        <h2 style="color: var(--primary-color); margin: 0;">CÔNG ĐOÀN TỔ LƯỚI ĐIỆN - KỸ THUẬT</h2>
-        <p style="margin: 5px 0;">Hệ thống thông báo & Xác nhận điện tử</p>
-        <small>Phiên bản: v1.0 | Quản trị: Trần Công Đẹp</small>
+        <h1 style="margin:0;">Tổ Công đoàn LĐ 2 - KT</h1>
     </div>
 
-    <input type="text" id="searchInput" class="search-box" placeholder="Nhập trích yếu, số văn bản hoặc tên file để tìm kiếm..." onkeyup="filterFunction()">
-
-    <div id="notificationList">
-        <p style="text-align: center; color: #999;">Đang tải dữ liệu thông báo...</p>
+    <div class="container">
+        <a href="thong-bao.html" class="nav-card">
+            <div style="font-size: 50px;">📢</div>
+            <h3>XEM THÔNG BÁO</h3>
+            <p>Xem danh sách chúc mừng sinh nhật và văn bản công đoàn.</p>
+        </a>
+        <a href="tham-hoi.html" class="nav-card">
+            <div style="font-size: 50px;">🏥</div>
+            <h3>ĐĂNG KÝ THĂM HỎI</h3>
+            <p>Gửi yêu cầu thăm hỏi ốm đau, hiếu hỉ trực tuyến.</p>
+        </a>
     </div>
 
     <div class="footer">
-        © 2026 Bản quyền thuộc về Tổ Công đoàn LĐ-KT [cite: 2, 7, 16]
+        Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882
     </div>
-</div>
-
-<script>
-    // Cấu hình Firebase Server US của anh
-    const firebaseConfig = {
-        apiKey: "AIzaSyAAbewMRAeYAKePY_6YgQ7yd2BiSII0xJY",
-        authDomain: "tocongdoanld2kt.firebaseapp.com",
-        databaseURL: "https://tocongdoanld2kt-default-rtdb.firebaseio.com/", 
-        projectId: "tocongdoanld2kt",
-        storageBucket: "tocongdoanld2kt.firebasestorage.app",
-        messagingSenderId: "345019155294",
-        appId: "1:345019155294:web:74b43c9a0d935f05b585cf",
-        measurementId: "G-G1RYSSN9DW"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // Lắng nghe dữ liệu từ nhánh 'thongbao'
-    db.ref('thongbao').on('value', (snapshot) => {
-        const listDiv = document.getElementById('notificationList');
-        listDiv.innerHTML = '';
-        const data = snapshot.val();
-
-        if (!data) {
-            listDiv.innerHTML = '<p style="text-align: center;">Chưa có thông báo nào được đăng.</p>';
-            return;
-        }
-
-        for (let key in data) {
-            const item = data[key];
-            const card = `
-                <div class="card">
-                    <div class="info">
-                        <strong style="color: var(--primary-color);">${item.so || 'Số hiệu: --'}</strong><br>
-                        <span style="font-size: 16px;">${item.trichYeu}</span><br>
-                        <small style="color: #888;">Ngày đăng: ${new Date(item.ngayKy).toLocaleDateString('vi-VN')}</small>
-                    </div>
-                    <div class="actions">
-                        <a href="${item.url}" target="_blank" class="btn btn-view">Xem văn bản</a>
-                        <button onclick="confirmRead('${key}', '${item.trichYeu}')" class="btn btn-confirm">Xác nhận đã đọc</button>
-                    </div>
-                </div>
-            `;
-            listDiv.insertAdjacentHTML('afterbegin', card);
-        }
-    });
-
-    // Hàm tìm kiếm
-    function filterFunction() {
-        const input = document.getElementById('searchInput').value.toUpperCase();
-        const cards = document.getElementsByClassName('card');
-        for (let i = 0; i < cards.length; i++) {
-            const text = cards[i].innerText.toUpperCase();
-            cards[i].style.display = text.includes(input) ? "" : "none";
-        }
-    }
-
-    // Hàm xác nhận đã đọc (Dựa trên MSNV trong file Danh sach DVCD) 
-    function confirmRead(id, title) {
-        const msnv = prompt("Vui lòng nhập Mã Số Nhân Viên (MSNV) để xác nhận đã đọc:\n\"" + title + "\"");
-        if (msnv && msnv.trim() !== "") {
-            db.ref('xacnhan/' + id).push({
-                msnv: msnv.trim(),
-                thoiGian: new Date().toISOString(),
-                thietBi: navigator.userAgent
-            }).then(() => {
-                alert("Hệ thống đã ghi nhận xác nhận của MSNV: " + msnv);
-            });
-        }
-    }
-</script>
 </body>
 </html>
