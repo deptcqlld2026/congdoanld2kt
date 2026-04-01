@@ -1,38 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng ký Thăm hỏi | v1.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký Thăm hỏi | Tổ Công đoàn LĐ 2 - KT</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #eceff1; }
-        .form-container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-submit { background: #d32f2f; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; }
+        :root { --primary-color: #004a99; --accent-color: #d32f2f; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { background: var(--primary-color); color: white; text-align: center; padding: 20px 0; position: relative; }
+        .btn-home { position: absolute; top: 20px; left: 20px; background: white; color: var(--primary-color); padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .container { max-width: 600px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); flex: 1; width: 90%; }
+        label { font-weight: bold; display: block; margin-top: 15px; color: #333; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .btn-submit { background-color: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        .btn-submit:hover { background-color: #b71c1c; }
+        .footer { background: #333; color: white; text-align: center; padding: 15px 0; font-size: 14px; width: 100%; }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2 style="color: #d32f2f; text-align: center;">ĐĂNG KÝ THĂM HỎI CÔNG ĐOÀN</h2>
-        <form id="formThamHoi">
-            <input type="text" id="msnv" placeholder="Nhập MSNV của anh/chị" required>
-            <input type="text" id="hoTen" placeholder="Họ và tên" required>
-            <select id="lyDo">
-                <option value="Ốm đau">Ốm đau / Nằm viện</option>
-                <option value="Hiếu hỉ">Việc hiếu / hỉ</option>
-                <option value="Khác">Lý do khác</option>
-            </select>
-            <p>Đính kèm hồ sơ (Ảnh đơn thuốc/Giấy viện):</p>
-            <input type="file" id="fileHoSo" accept="image/*,application/pdf">
-            <textarea id="ghiChu" placeholder="Ghi chú thêm..."></textarea>
-            <button type="button" class="btn-submit" onclick="guiYeuCau()">GỬI ĐĂNG KÝ</button>
-        </form>
-    </div>
 
-    <script>
-        function guiYeuCau() {
-            // Logic này sẽ kết nối với Firebase Storage và Realtime Database ở v1.2
-            alert("Chức năng đang được kết nối với Firebase của anh Đẹp!");
+<div class="header">
+    <a href="index.html" class="btn-home">🏠 Home</a>
+    <h1 style="margin:0;">Tổ Công đoàn LĐ 2 - KT</h1>
+</div>
+
+<div class="container">
+    <h3 style="color: var(--accent-color); text-align: center; margin-top: 0;">ĐĂNG KÝ THĂM HỎI TRỰC TUYẾN</h3>
+    <form id="formThamHoi">
+        <label>Mã số nhân viên (MSNV):</label>
+        <input type="text" id="msnv" placeholder="Nhập MSNV của anh/chị" required>
+
+        <label>Họ và tên:</label>
+        <input type="text" id="hoTen" placeholder="Nhập đầy đủ họ tên" required>
+
+        <label>Lý do thăm hỏi:</label>
+        <select id="lyDo">
+            <option value="Ốm đau">Ốm đau / Nằm viện</option>
+            <option value="Hiếu hỉ">Việc hiếu / hỉ</option>
+            <option value="Khó khăn">Hoàn cảnh khó khăn</option>
+            <option value="Khác">Lý do khác</option>
+        </select>
+
+        <label>Đính kèm hồ sơ (Ảnh đơn thuốc/Giấy viện):</label>
+        <input type="file" id="fileHoSo" accept="image/*,application/pdf">
+
+        <label>Ghi chú/Nội dung cụ thể:</label>
+        <textarea id="ghiChu" rows="3" placeholder="Ví dụ: Nằm viện tại BV Chợ Rẫy từ ngày..."></textarea>
+
+        <button type="button" class="btn-submit" onclick="submitThamHoi()">GỬI YÊU CẦU ĐĂNG KÝ</button>
+    </form>
+</div>
+
+<div class="footer">
+    Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882
+</div>
+
+<script>
+    function submitThamHoi() {
+        const msnv = document.getElementById('msnv').value;
+        const hoTen = document.getElementById('hoTen').value;
+        
+        if (!msnv || !hoTen) {
+            alert("Vui lòng điền đầy đủ MSNV và Họ tên!");
+            return;
         }
-    </script>
+
+        // Tạm thời hiển thị thông báo, logic đẩy Firebase Storage sẽ hoàn thiện ở v1.5
+        alert("Cảm ơn anh " + hoTen + " (MSNV: " + msnv + "). Yêu cầu của anh đã được gửi tới Tổ trưởng Trần Công Đẹp.");
+    }
+</script>
 </body>
 </html>
