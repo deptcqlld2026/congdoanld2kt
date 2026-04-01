@@ -7,66 +7,75 @@
     <style>
         :root { --primary-color: #004a99; --accent-color: #d32f2f; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        .header { background: var(--primary-color); color: white; text-align: center; padding: 20px 0; position: relative; }
-        .btn-home { position: absolute; top: 20px; left: 20px; background: white; color: var(--primary-color); padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px; }
-        .container { max-width: 600px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); flex: 1; width: 90%; }
-        label { font-weight: bold; display: block; margin-top: 15px; color: #333; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .header { background: var(--primary-color); color: white; text-align: center; padding: 20px 10px; position: relative; }
+        .btn-home { position: absolute; top: 15px; left: 10px; background: white; color: var(--primary-color); padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 12px; }
+        .container { max-width: 600px; margin: 15px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); flex: 1; width: 95%; box-sizing: border-box; }
+        label { font-weight: bold; display: block; margin-top: 15px; color: #333; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #fff; }
+        input[readonly] { background-color: #f0f0f0; cursor: not-allowed; }
+        .file-wrapper { position: relative; display: flex; align-items: center; gap: 10px; }
+        .camera-icon { font-size: 24px; cursor: pointer; }
         .btn-submit { background-color: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; transition: 0.3s; }
-        .btn-submit:hover { background-color: #b71c1c; }
-        .footer { background: #333; color: white; text-align: center; padding: 15px 0; font-size: 14px; width: 100%; }
+        .footer { background: #333; color: white; text-align: center; padding: 15px 10px; font-size: 13px; width: 100%; box-sizing: border-box; }
+        #loadingName { font-size: 12px; color: blue; display: none; }
     </style>
 </head>
 <body>
-
 <div class="header">
     <a href="index.html" class="btn-home">🏠 Home</a>
-    <h1 style="margin:0;">Tổ Công đoàn LĐ 2 - KT</h1>
+    <h1 style="margin:0; font-size: 1.5rem;">Tổ Công đoàn LĐ 2 - KT</h1>
 </div>
-
 <div class="container">
-    <h3 style="color: var(--accent-color); text-align: center; margin-top: 0;">ĐĂNG KÝ THĂM HỎI TRỰC TUYẾN</h3>
+    <h3 style="color: var(--accent-color); text-align: center; margin-top: 0;">ĐĂNG KÝ THĂM HỎI</h3>
     <form id="formThamHoi">
         <label>Mã số nhân viên (MSNV):</label>
-        <input type="text" id="msnv" placeholder="Nhập MSNV của anh/chị" required>
+        <input type="text" id="msnv" placeholder="Hãy nhập mã nhân viên của anh chị (ví dụ: 001702)" onchange="lookupName()" required>
+        <div id="loadingName">Đang tra cứu tên...</div>
 
-        <label>Họ và tên:</label>
-        <input type="text" id="hoTen" placeholder="Nhập đầy đủ họ tên" required>
+        <label>Họ và tên (Tự động):</label>
+        <input type="text" id="hoTen" placeholder="Tên sẽ hiện sau khi nhập MSNV" readonly required>
 
         <label>Lý do thăm hỏi:</label>
         <select id="lyDo">
             <option value="Ốm đau">Ốm đau / Nằm viện</option>
             <option value="Hiếu hỉ">Việc hiếu / hỉ</option>
             <option value="Khó khăn">Hoàn cảnh khó khăn</option>
-            <option value="Khác">Lý do khác</option>
         </select>
 
-        <label>Đính kèm hồ sơ (Ảnh đơn thuốc/Giấy viện):</label>
-        <input type="file" id="fileHoSo" accept="image/*,application/pdf">
+        <label>Đính kèm hồ sơ (Ảnh chụp hoặc File):</label>
+        <div class="file-wrapper">
+            <input type="file" id="fileHoSo" accept="image/*" capture="environment">
+            <span class="camera-icon" title="Chụp ảnh trực tiếp">📷</span>
+        </div>
 
-        <label>Ghi chú/Nội dung cụ thể:</label>
-        <textarea id="ghiChu" rows="3" placeholder="Ví dụ: Nằm viện tại BV Chợ Rẫy từ ngày..."></textarea>
+        <label>Ghi chú:</label>
+        <textarea id="ghiChu" rows="3" placeholder="Thông tin thêm..."></textarea>
 
-        <button type="button" class="btn-submit" onclick="submitThamHoi()">GỬI YÊU CẦU ĐĂNG KÝ</button>
+        <button type="button" class="btn-submit" onclick="submitThamHoi()">GỬI ĐĂNG KÝ</button>
     </form>
 </div>
-
-<div class="footer">
-    Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882
-</div>
+<div class="footer">Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882</div>
 
 <script>
-    function submitThamHoi() {
+    // Hàm tra cứu tên từ Apps Script (Cần kết nối với hàm tìm kiếm MSNV ở Code.gs)
+    function lookupName() {
         const msnv = document.getElementById('msnv').value;
-        const hoTen = document.getElementById('hoTen').value;
+        const nameField = document.getElementById('hoTen');
+        const loading = document.getElementById('loadingName');
         
-        if (!msnv || !hoTen) {
-            alert("Vui lòng điền đầy đủ MSNV và Họ tên!");
-            return;
+        if (msnv.length > 3) {
+            loading.style.display = 'block';
+            // Giả lập gọi Google Apps Script qua google.script.run (khi đưa vào GAS)
+            // Hoặc tra cứu trực tiếp nếu anh lưu cache DSDV trên Firebase
+            console.log("Đang tra cứu MSNV: " + msnv);
+            // Sau khi tra cứu thành công:
+            // nameField.value = "Kết quả tra cứu"; 
+            // loading.style.display = 'none';
         }
+    }
 
-        // Tạm thời hiển thị thông báo, logic đẩy Firebase Storage sẽ hoàn thiện ở v1.5
-        alert("Cảm ơn anh " + hoTen + " (MSNV: " + msnv + "). Yêu cầu của anh đã được gửi tới Tổ trưởng Trần Công Đẹp.");
+    function submitThamHoi() {
+        alert("Yêu cầu của anh/chị đang được xử lý hệ thống v1.5.");
     }
 </script>
 </body>
