@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo | Tổ Công đoàn LĐ 2 - KT</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        :root { --primary-color: #004a99; --success-color: #28a745; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { background: var(--primary-color); color: white; text-align: center; padding: 20px 0; position: relative; }
+        .btn-home { position: absolute; top: 20px; left: 20px; background: white; color: var(--primary-color); padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .container { max-width: 1000px; margin: 20px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); flex: 1; width: 90%; }
+        .search-box { width: 100%; padding: 12px 20px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 25px; font-size: 16px; outline: none; box-sizing: border-box; }
+        .card { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .card:hover { background-color: #f1f8ff; border-color: var(--primary-color); }
+        .info { flex-grow: 1; }
+        .actions { display: flex; gap: 10px; }
+        .btn { padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 14px; }
+        .btn-view { background-color: var(--primary-color); color: white; }
+        .btn-confirm { background-color: var(--success-color); color: white; }
+        .footer { background: #333; color: white; text-align: center; padding: 15px 0; font-size: 14px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="index.html" class="btn-home">🏠 Home</a>
+    <h1 style="margin:0;">Tổ Công đoàn LĐ 2 - KT</h1>
+</div>
+
+<div class="container">
+    <h3 style="color: var(--primary-color); text-align: center;">DANH SÁCH THÔNG BÁO & VĂN BẢN</h3>
+    <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm trích yếu, số hiệu hoặc tên file..." onkeyup="filterFunction()">
+
+    <div id="notificationList">
+        <p style="text-align: center; color: #999;">Đang tải dữ liệu thông báo...</p>
+    </div>
+</div>
+
+<div class="footer">
+    Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAAbewMRAeYAKePY_6YgQ7yd2BiSII0xJY",
+        authDomain: "tocongdoanld2kt.firebaseapp.com",
+        databaseURL: "https://tocongdoanld2kt-default-rtdb.firebaseio.com/", 
+        projectId: "tocongdoanld2kt",
+        storageBucket: "tocongdoanld2kt.firebasestorage.app",
+        messagingSenderId: "345019155294",
+        appId: "1:345019155294:web:74b43c9a0d935f05b585cf"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    db.ref('thongbao').on('value', (snapshot) => {
+        const listDiv = document.getElementById('notificationList');
+        listDiv.innerHTML = '';
+        const data = snapshot.val();
+
+        if (!data) {
+            listDiv.innerHTML = '<p style="text-align: center;">Chưa có thông báo nào.</p>';
+            return;
+        }
+
+        for (let key in data) {
+            const item = data[key];
+            const card = `
+                <div class="card">
+                    <div class="info">
+                        <strong style="color: var(--primary-color);">${item.so || 'Số hiệu: --'}</strong><br>
+                        <span>${item.trichYeu}</span><br>
+                        <small style="color: #888;">Ngày: ${new Date(item.ngayKy).toLocaleDateString('vi-VN')}</small>
+                    </div>
+                    <div class="actions">
+                        <a href="${item.url}" target="_blank" class="btn btn-view">Xem file</a>
+                        <button onclick="confirmRead('${key}', '${item.trichYeu}')" class="btn btn-confirm">Xác nhận</button>
+                    </div>
+                </div>
+            `;
+            listDiv.insertAdjacentHTML('afterbegin', card);
+        }
+    });
+
+    function filterFunction() {
+        const input = document.getElementById('searchInput').value.toUpperCase();
+        const cards = document.getElementsByClassName('card');
+        for (let i = 0; i < cards.length; i++) {
+            const text = cards[i].innerText.toUpperCase();
+            cards[i].style.display = text.includes(input) ? "" : "none";
+        }
+    }
+
+    function confirmRead(id, title) {
+        const msnv = prompt("Nhập MSNV để xác nhận đã đọc:\n" + title);
+        if (msnv && msnv.trim() !== "") {
+            db.ref('xacnhan/' + id).push({
+                msnv: msnv.trim(),
+                thoiGian: new Date().toISOString()
+            }).then(() => alert("Đã ghi nhận xác nhận!"));
+        }
+    }
+</script>
+</body>
+</html>
