@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký Thăm hỏi | v1.1</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #eceff1; }
+        .form-container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-submit { background: #d32f2f; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 style="color: #d32f2f; text-align: center;">ĐĂNG KÝ THĂM HỎI CÔNG ĐOÀN</h2>
+        <form id="formThamHoi">
+            <input type="text" id="msnv" placeholder="Nhập MSNV của anh/chị" required>
+            <input type="text" id="hoTen" placeholder="Họ và tên" required>
+            <select id="lyDo">
+                <option value="Ốm đau">Ốm đau / Nằm viện</option>
+                <option value="Hiếu hỉ">Việc hiếu / hỉ</option>
+                <option value="Khác">Lý do khác</option>
+            </select>
+            <p>Đính kèm hồ sơ (Ảnh đơn thuốc/Giấy viện):</p>
+            <input type="file" id="fileHoSo" accept="image/*,application/pdf">
+            <textarea id="ghiChu" placeholder="Ghi chú thêm..."></textarea>
+            <button type="button" class="btn-submit" onclick="guiYeuCau()">GỬI ĐĂNG KÝ</button>
+        </form>
+    </div>
+
+    <script>
+        function guiYeuCau() {
+            // Logic này sẽ kết nối với Firebase Storage và Realtime Database ở v1.2
+            alert("Chức năng đang được kết nối với Firebase của anh Đẹp!");
+        }
+    </script>
+</body>
+</html>
