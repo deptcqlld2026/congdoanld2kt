@@ -14,7 +14,7 @@
         input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         input[readonly] { background-color: #e9ecef; }
         .btn-submit { background-color: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; }
-        .footer { background: #333; color: white; text-align: center; padding: 15px 10px; font-size: 14px; width: 100%; }
+        .footer { background: #333; color: white; text-align: center; padding: 15px 0; font-size: 14px; width: 100%; }
         #loadingName { font-size: 12px; margin-top: 5px; min-height: 15px; font-weight: 500; }
     </style>
 </head>
@@ -51,7 +51,7 @@
 </div>
 <div class="footer">
     Xây dựng năm 2026 bởi Trần Công Đẹp - Điện thoại 0963292882 <br>
-    <small>Phiên bản hệ thống: v2.0</small>
+    <small>Phiên bản hệ thống: v2.1</small>
 </div>
 
 <script>
@@ -92,7 +92,7 @@
     function submitForm() {
         const hoTen = document.getElementById('hoTen').value;
         if (!hoTen || hoTen === "Không tìm thấy") return alert("Vui lòng nhập đúng MSNV!");
-        alert("Hệ thống v2.0 đã ghi nhận yêu cầu của đồng chí " + hoTen);
+        alert("Hệ thống v2.1 đã ghi nhận yêu cầu của đồng chí " + hoTen);
     }
 </script>
 </body>
